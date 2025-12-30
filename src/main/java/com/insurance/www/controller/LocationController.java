@@ -10,7 +10,10 @@ import com.insurance.www.service.LocationService;
 
 @RestController
 @RequestMapping("/locations")
-@CrossOrigin(origins = "http://localhost:9505")
+@CrossOrigin(origins = {"http://localhost:9505",
+		"https://insurancefront.netlify.app"
+	    }
+	)
 public class LocationController {
 
     @Autowired

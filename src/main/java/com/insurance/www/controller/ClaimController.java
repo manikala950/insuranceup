@@ -14,7 +14,10 @@ import java.time.LocalDate;
 
 @RestController
 @RequestMapping("/api/claims")
-@CrossOrigin(origins = "http://localhost:9505")
+@CrossOrigin(origins = {"http://localhost:9505",
+		"https://insurancefront.netlify.app"
+	    }
+	)
 public class ClaimController {
 
 

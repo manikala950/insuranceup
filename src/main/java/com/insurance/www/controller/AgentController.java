@@ -8,7 +8,10 @@ import com.insurance.www.service.AgentService;
 
 @RestController
 @RequestMapping("/agent")
-@CrossOrigin(origins = "http://localhost:9505")
+@CrossOrigin(origins = {"http://localhost:9505",
+		"https://insurancefront.netlify.app"
+	    }
+	)
 public class AgentController {
 
     @Autowired

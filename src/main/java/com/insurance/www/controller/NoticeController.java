@@ -11,7 +11,10 @@ import com.insurance.www.service.NoticeService;
 
 @RestController
 @RequestMapping("/api/notice")
-@CrossOrigin(origins = "http://localhost:9505")
+@CrossOrigin(origins = {"http://localhost:9505",
+		"https://insurancefront.netlify.app"
+	    }
+	)
 public class NoticeController {
 
     private final NoticeService service;

@@ -13,7 +13,10 @@ import com.insurance.www.util.FileStorageUtil;
 
 @RestController
 @RequestMapping("/api/customers")
-@CrossOrigin(origins = "http://localhost:9505")
+@CrossOrigin(origins = {"http://localhost:9505",
+		"https://insurancefront.netlify.app"
+	    }
+	)
 public class CustomerController {
 
     @Autowired
