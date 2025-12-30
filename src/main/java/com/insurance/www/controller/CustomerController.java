@@ -13,7 +13,7 @@ import com.insurance.www.util.FileStorageUtil;
 
 @RestController
 @RequestMapping("/api/customers")
-@CrossOrigin(origins = "http://localhost:8080")
+@CrossOrigin(origins = "http://localhost:9505")
 public class CustomerController {
 
     @Autowired

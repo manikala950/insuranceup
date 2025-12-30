@@ -10,7 +10,7 @@ import com.insurance.www.service.LocationService;
 
 @RestController
 @RequestMapping("/locations")
-@CrossOrigin(origins = "http://localhost:8080")
+@CrossOrigin(origins = "http://localhost:9505")
 public class LocationController {
 
     @Autowired

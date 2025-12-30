@@ -8,7 +8,7 @@ import com.insurance.www.service.AgentService;
 
 @RestController
 @RequestMapping("/agent")
-@CrossOrigin(origins = "http://localhost:8080")
+@CrossOrigin(origins = "http://localhost:9505")
 public class AgentController {
 
     @Autowired

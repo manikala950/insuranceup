@@ -11,7 +11,7 @@ import com.insurance.www.service.NoticeService;
 
 @RestController
 @RequestMapping("/api/notice")
-@CrossOrigin(origins = "http://localhost:8080")
+@CrossOrigin(origins = "http://localhost:9505")
 public class NoticeController {
 
     private final NoticeService service;
