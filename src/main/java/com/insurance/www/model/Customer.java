@@ -1,8 +1,18 @@
 package com.insurance.www.model;
 
+import java.time.LocalDate;
+
 import org.hibernate.annotations.GenericGenerator;
-import jakarta.persistence.*;
-import lombok.*;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(
@@ -50,4 +60,5 @@ public class Customer {
     private String aadhaarFilePath;
     private String panFilePath;
     private String photoPath;
+    private LocalDate date;
 }

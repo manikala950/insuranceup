@@ -6,7 +6,7 @@ import java.io.Serializable;
 
 public class CustomerIdGenerator implements IdentifierGenerator {
 
-    private static final String PREFIX = "CUS";
+    private static final String PREFIX = "UPL";
 
     @Override
     public Serializable generate(SharedSessionContractImplementor session, Object obj) {

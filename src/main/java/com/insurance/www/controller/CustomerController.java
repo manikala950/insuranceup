@@ -1,9 +1,13 @@
 package com.insurance.www.controller;
 
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -13,10 +17,12 @@ import com.insurance.www.util.FileStorageUtil;
 
 @RestController
 @RequestMapping("/api/customers")
-@CrossOrigin(origins = {"http://localhost:9505",
-		"https://insurancefront.netlify.app"
-	    }
-	)
+@CrossOrigin(
+    origins = {
+        "http://localhost:9505",
+        "https://insurancefront.netlify.app"
+    }
+)
 public class CustomerController {
 
     @Autowired
@@ -24,7 +30,7 @@ public class CustomerController {
 
     /* ================= ADD ================= */
     @PostMapping(value = "/add", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public Customer addCustomer(
+    public ResponseEntity<?> addCustomer(
             @RequestParam String name,
             @RequestParam String email,
             @RequestParam long number,
@@ -38,36 +44,58 @@ public class CustomerController {
             @RequestParam String bankAccount,
             @RequestParam String ifsc,
             @RequestParam String agentId,
+            @RequestParam String date,
             @RequestPart(required = false) MultipartFile aadharFile,
             @RequestPart(required = false) MultipartFile panFile,
             @RequestPart(required = false) MultipartFile photo
     ) {
+        try {
+            Customer c = new Customer();
+            c.setName(name);
+            c.setEmail(email);
+            c.setNumber(number);
+            c.setAadhaar(aadhaar);
+            c.setPan(pan);
+            c.setAddress(address);
+            c.setState(state);
+            c.setDistrict(district);
+            c.setMandal(mandal);
+            c.setBankName(bankName);
+            c.setBankAccount(bankAccount);
+            c.setIfsc(ifsc);
+            c.setAgentId(agentId);
 
-        Customer c = new Customer();
-        c.setName(name);
-        c.setEmail(email);
-        c.setNumber(number);
-        c.setAadhaar(aadhaar);
-        c.setPan(pan);
-        c.setAddress(address);
-        c.setState(state);
-        c.setDistrict(district);
-        c.setMandal(mandal);
-        c.setBankName(bankName);
-        c.setBankAccount(bankAccount);
-        c.setIfsc(ifsc);
-        c.setAgentId(agentId);
+            if (date != null && !date.isBlank()) {
+                c.setDate(LocalDate.parse(date));
+            }
 
-        if (aadharFile != null && !aadharFile.isEmpty())
-            c.setAadhaarFilePath(FileStorageUtil.save(aadharFile));
+            if (aadharFile != null && !aadharFile.isEmpty()) {
+                c.setAadhaarFilePath(FileStorageUtil.save(aadharFile));
+            }
 
-        if (panFile != null && !panFile.isEmpty())
-            c.setPanFilePath(FileStorageUtil.save(panFile));
+            if (panFile != null && !panFile.isEmpty()) {
+                c.setPanFilePath(FileStorageUtil.save(panFile));
+            }
 
-        if (photo != null && !photo.isEmpty())
-            c.setPhotoPath(FileStorageUtil.save(photo));
+            if (photo != null && !photo.isEmpty()) {
+                c.setPhotoPath(FileStorageUtil.save(photo));
+            }
 
-        return service.saveCustomer(c);
+            Customer saved = service.saveCustomer(c);
+            return ResponseEntity.ok(saved);
+
+        } catch (DataIntegrityViolationException e) {
+            // UNIQUE constraint violations
+            return ResponseEntity
+                    .badRequest()
+                    .body(Map.of("message", "Duplicate value already exists"));
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity
+                    .internalServerError()
+                    .body(Map.of("message", "Server error while adding customer"));
+        }
     }
 
     /* ================= GET ALL ================= */
@@ -82,7 +110,7 @@ public class CustomerController {
         return service.getCustomerByCustId(custId);
     }
 
-    /* ================= FILTER SEARCH ================= */
+    /* ================= FILTER ================= */
     @GetMapping("/filter")
     public List<Customer> filter(
             @RequestParam(required = false) String name,
@@ -95,7 +123,7 @@ public class CustomerController {
 
     /* ================= UPDATE ================= */
     @PutMapping(value = "/{custId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public Customer updateCustomer(
+    public ResponseEntity<?> updateCustomer(
             @PathVariable String custId,
             @RequestParam String name,
             @RequestParam String email,
@@ -104,35 +132,53 @@ public class CustomerController {
             @RequestParam String bankName,
             @RequestParam String bankAccount,
             @RequestParam String ifsc,
+            @RequestParam String date,
             @RequestPart(required = false) MultipartFile aadharFile,
             @RequestPart(required = false) MultipartFile panFile,
             @RequestPart(required = false) MultipartFile photo
     ) {
+        try {
+            Customer c = new Customer();
+            c.setName(name);
+            c.setEmail(email);
+            c.setNumber(number);
+            c.setAddress(address);
+            c.setBankName(bankName);
+            c.setBankAccount(bankAccount);
+            c.setIfsc(ifsc);
+            c.setDate(LocalDate.parse(date));
 
-        Customer c = new Customer();
-        c.setName(name);
-        c.setEmail(email);
-        c.setNumber(number);
-        c.setAddress(address);
-        c.setBankName(bankName);
-        c.setBankAccount(bankAccount);
-        c.setIfsc(ifsc);
+            if (aadharFile != null && !aadharFile.isEmpty()) {
+                c.setAadhaarFilePath(FileStorageUtil.save(aadharFile));
+            }
 
-        if (aadharFile != null && !aadharFile.isEmpty())
-            c.setAadhaarFilePath(FileStorageUtil.save(aadharFile));
+            if (panFile != null && !panFile.isEmpty()) {
+                c.setPanFilePath(FileStorageUtil.save(panFile));
+            }
 
-        if (panFile != null && !panFile.isEmpty())
-            c.setPanFilePath(FileStorageUtil.save(panFile));
+            if (photo != null && !photo.isEmpty()) {
+                c.setPhotoPath(FileStorageUtil.save(photo));
+            }
 
-        if (photo != null && !photo.isEmpty())
-            c.setPhotoPath(FileStorageUtil.save(photo));
+            return ResponseEntity.ok(service.updateCustomer(custId, c));
 
-        return service.updateCustomer(custId, c);
+        } catch (DataIntegrityViolationException e) {
+            return ResponseEntity
+                    .badRequest()
+                    .body(Map.of("message", "Duplicate value already exists"));
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity
+                    .internalServerError()
+                    .body(Map.of("message", "Error updating customer"));
+        }
     }
 
     /* ================= DELETE ================= */
     @DeleteMapping("/{custId}")
-    public void delete(@PathVariable String custId) {
+    public ResponseEntity<?> delete(@PathVariable String custId) {
         service.deleteCustomer(custId);
+        return ResponseEntity.ok().build();
     }
 }
